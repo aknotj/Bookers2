@@ -2,21 +2,21 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   has_many :books, dependent: :destroy
-  has_one_attached :image
+  has_one_attached :profile_image
 
 
   validates :name, length: { in: 2..20 }
-  validates :introduction, length: { maximum: 50 }
+  validates :body, length: { maximum: 50 }
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  def get_image(width, height)
-    unless image.attached?
+  def get_profile_image(width, height)
+    unless profile_image.attached?
       file_path = Rails.root.join('app/assets/images/no_image.jpg')
-      image.attach(io: File.open(file_path), filename: 'default-image.jpg', content_type: 'image/jpg')
+      profile_image.attach(io: File.open(file_path), filename: 'no_image.jpg', content_type: 'image/jpg')
     end
-    image.variant(resize_to_limit: [width, height]).processed
+    profile_image.variant(resize_to_limit: [width, height]).processed
   end
 
 end
